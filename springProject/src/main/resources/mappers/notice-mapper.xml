@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="noticeMapper">
+	
+	<resultMap id="noticeResultSet" type="Notice">
+		<id property="nId" column="NID"/>	<!-- 식별자 -->
+		<result property="nTitle" column="NTITLE"/>
+		<result property="nWriter" column="NWRITER"/>
+		<result property="nContent" column="NCONTENT"/>
+		<result property="nCreateDate" column="N_CREATE_DATE"/>
+		<result property="nModifyDate" column="N_MODIFY_DATE"/>
+		<result property="filePath" column="FILE_PATH"/>
+	</resultMap>
+	
+	<select id="selectList" resultMap="noticeResultSet">
+		SELECT * 
+		FROM NOTICE
+		<!-- ORDER BY NID DESC -->
+		ORDER BY N_CREATE_DATE DESC
+	</select>
+	
+	<select id="selectOne" parameterType="_int" resultMap="noticeResultSet">
+		SELECT * FROM NOTICE WHERE NID = #{nId}
+	</select>
+	
+	<insert id="insertNotice" parameterType="Notice">
+		INSERT INTO NOTICE VALUES(
+			SEQ_NID.NEXTVAL, #{nTitle}, #{nWriter}, #{nContent}, SYSDATE, SYSDATE, #{filePath}
+		)
+	</insert>
+	
+	<update id="updateNotice" parameterType="Notice">
+		UPDATE NOTICE
+		SET NTITLE=#{nTitle},
+			NCONTENT=#{nContent},
+			FILE_PATH=#{filePath}
+		WHERE NID=#{nId}
+	</update>
+	
+	<delete id="deleteNotice" parameterType="_int">
+		DELETE FROM NOTICE
+		WHERE NID=#{nId}
+	</delete>
+</mapper>

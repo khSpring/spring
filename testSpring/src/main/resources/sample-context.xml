@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+   
+   <!-- 이 xml 파일은  자바 Bean(자바 객체)를 만드는 공간이다.
+   		스프링에서 필요한 객체를 여기에 미리 선언한 뒤,
+   		서버 실행시에 스프링 컨테이너에 의해 생성된다.
+   		(서버 실행과 동시에 XML 문서를 읽어 관련 객체를 미리 등록한다.)
+   -->
+   <bean id="lg" class="com.kh.testSpring.di.model.vo.LgTV"/>
+   <bean id="samsung" class="com.kh.testSpring.di.model.vo.SamsungTV"/>
+   
+   <!-- TvMgr클래스를 작성하자 -->
+   <!-- setter를 통해서 빈 객체를 주입하는 방법 -->
+   <bean id="tvmgr" class="com.kh.testSpring.di.model.vo.TvMgr">
+   		<property name="tv" ref="lg"/>
+   </bean>
+</beans>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	
+	<!-- 
+		1. DataSource 등록(어떤 DBMS의 어떤 계정과 연동할지)은 서버연동과 같이 이루어 져야 되기 때문에
+			root-context에서 설정한다.
+			이때 등록 순서(위치)는 중요하다.
+			먼저 DataSource를 bean으로 등록 해야만 아래에서 이 DataSource를 참조할 수 있다.
+	 -->
+	 
+	 <!-- DB에 있는 데이터를 불러오기 전에 연결을 하기 위한 bean객체 설정 -->
+	 <bean id="dataSource"
+	 	class="org.apache.commons.dbcp.BasicDataSource"
+	 	destroy-method="close">
+	 <!-- destroy-method="close"는 주어진 세션을 자동으로 close하라는 의미(close메소드 자동 실행) -->
+		 <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"></property>
+		 <property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"></property>
+		 <property name="username" value="spring"></property>
+		 <property name="password" value="spring"></property>
+		 <property name="defaultAutoCommit" value="false"></property>
+	 </bean>
+	 
+	 <bean id="sqlSession"
+	 	class="org.mybatis.spring.SqlSessionFactoryBean">
+
+	 <property name="configLocation"
+	 	value="classpath:mybatis-config.xml">
+	 </property>
+	 	<property name="dataSource" ref="dataSource"></property>
+	 </bean>
+	 
+	 <bean id="sqlSessionTemplate"
+	 	class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="sqlSession"></constructor-arg>
+	 </bean>
+</beans>

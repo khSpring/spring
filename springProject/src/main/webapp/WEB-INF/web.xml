@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee https://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+	<!-- The definition of the Root Spring Container shared by all Servlets and Filters -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/spring/root-context.xml
+					/WEB-INF/spring/spring-security.xml <!-- 암호화 처리 후에 추가 해주자 -->
+		</param-value>
+	</context-param>
+	
+	<!-- Creates the Spring Container shared by all Servlets and Filters -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<!-- Processes application requests -->
+	<servlet>
+		<servlet-name>appServlet</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+		
+	<servlet-mapping>
+		<servlet-name>appServlet</servlet-name>
+		<url-pattern>*.do</url-pattern>
+	</servlet-mapping>
+	<!-- *.do인 요쳥을 DispatcherServlet에서 HandlerMapping을 통해 Controller로 요청하게 된다. -->
+	
+	<!-- 로그인 만들다가 MemberController부분에서 예외처리할 때 작성하자! -->
+	<error-page>
+		<exception-type>java.lang.Exception</exception-type>	
+		<!-- 자바 예외 형식 클래스명 또는 에러 코드 -->
+		<location>/WEB-INF/views/common/errorPage.jsp</location>	
+		<!-- 해당하는 에러 발생시 보여줄 페이지 -->
+	</error-page>
+	
+	<!-- 회원 가입시 인코딩 처리할 때 작성할 부분(한글 깨짐 방지 인코딩) -->
+	<filter>
+		<!-- filter 안에는 filter-name, filter-class, init-param을 추가하자 -->
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<!-- encoding 값을 UTF-8로 지정해 준다. -->
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+</web-app>
