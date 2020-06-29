@@ -35,7 +35,11 @@
 				<td align="center">${b.bId }</td>
 				<td align="left">
 					<c:if test="${!empty loginUser }">
-					
+						<c:url var="bdetail" value="bdetail.do">
+							<c:param name="bId" value="${b.bId }"/>
+							<c:param name="page" value="${pi.currentPage }"/>
+						</c:url>
+						<a href="${bdetail }">${b.bTitle }</a>
 					</c:if>
 					<c:if test="${empty loginUser }">
 						${b.bTitle }
@@ -96,5 +100,9 @@
 			</td>
 		</tr>
 	</table>
+	
+	<!-- 페이징 처리를 포함한 게시글 리스트 작성이 완료되면 게시글 작성 및 상세보기 완성하자. -->
+	
+	
 </body>
 </html>

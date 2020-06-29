@@ -27,4 +27,34 @@ public class BoardServiceImpl implements BoardService{
 		return bDao.selectList(pi);
 	}
 
+	@Override
+	public int insertBoard(Board b) {
+		
+		return bDao.insertBoard(b);
+	}
+
+	@Override
+	public int addReadCount(int bId) {
+	
+		return bDao.addReadCount(bId);
+	}
+
+	@Override
+	public Board selectBoard(int bId) {
+		// TODO Auto-generated method stub
+		return bDao.selectBoard(bId);
+	}
+
+	@Override
+	public int updateBoard(Board b) {
+		
+		return bDao.updateBoard(b);
+	}
+
+	@Override
+	public int deleteBoard(int bId) {
+		// TODO Auto-generated method stub
+		return bDao.deleteBoard(bId);
+	}
+
 }
