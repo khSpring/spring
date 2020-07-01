@@ -64,4 +64,14 @@
 	<update id="deleteBoard" parameterType="_int">
 		UPDATE BOARD SET B_STATUS = 'N' WHERE BID=#{bId}
 	</update>
+	
+	<select id="selectTopList" resultMap="boardResultSet">
+	<![CDATA[
+		SELECT *
+		FROM (SELECT *
+			  FROM BOARD
+			  ORDER BY BCOUNT DESC)
+		WHERE ROWNUM <= 5
+	]]>
+	</select>
 </mapper>

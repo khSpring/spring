@@ -163,8 +163,42 @@
 				})
 			})
 		</script>
+		
+		<li>
+			뷰에서 JSON객체를 컨트롤러로 보내기
+			<button id="test6">테스트</button>
+			<div id="d6"></div>
+		</li>
+		<br>
+		<script>
+			$(function(){
+				$("#test6").on("click",function(){
+					var obj = new Object();
+					obj.name = "최상원";
+					obj.age = 26;
+					
+					$.ajax({
+						url:"test6.do",
+						data:JSON.stringify(obj),	// JSON형을 String형태로 바꿔줌
+						type:"post",
+						contentType:"application/json;charset=utf-8",
+						// 뷰에서 어떠한 타입을 보내겠다 하는 내용을 쓰는 부분으로,
+						// requestBody를 쓰기 위해 이 속성을 서줘야 함
+						success:function(data){
+							$("#d6").html(data);
+						},
+						error:function(request, status, errorData){
+		                    alert("error code: " + request.status + "\n"
+		                          +"message: " + request.responseText
+		                          +"error: " + errorData);
+	                  	}
+					})
+				})
+			})
+		</script>
 	</ol>
 	
+	<!-- ajax 연습이 끝나면 다시 우리 프로젝트로 가서 ajax를 적용하자. memberJoin.jsp로 이동(아이디 중복체크) -->
 	
 	
 	

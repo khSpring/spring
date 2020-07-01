@@ -56,4 +56,9 @@ public class BoardDao {
 		return sqlSessionTemplate.update("boardMapper.deleteBoard", bId);
 	}
 
+	public ArrayList<Board> selectTopList() {
+		// TODO Auto-generated method stub
+		return (ArrayList)sqlSessionTemplate.selectList("boardMapper.selectTopList");
+	}
+
 }

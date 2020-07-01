@@ -8,13 +8,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -163,6 +165,46 @@ public class TestController {
 		
 		return mv;
 	}
+	
+	
+	/*
+	 *  6. JSON String형으로 넘어온 것을 변환하는 @RequestBody를 이용하는 방법
+	 *  	뷰에서 넘어온 json등의 데이터를 컨트롤러에서 자바객체로 변환해주는 어노테이션이다.
+	 */
+	@RequestMapping(value="test6.do", method=RequestMethod.POST)
+	@ResponseBody	//스트림을 안쓰고 보낼때
+	public String test6Method(@RequestBody String param) throws ParseException {
+		
+		//뷰에서는 stringify 메소드로 Json String형으로 넘어온 상태이다.
+		//@RequestBody를 통해 자바 객체인 string으로 바꿈.
+		
+		JSONParser parser = new JSONParser();
+		JSONObject jobj = (JSONObject)parser.parse(param);
+		
+		String name = (String)jobj.get("name");
+//		int age = (Integer)jobj.get("age");		// 이건 바로 Integer도 할 수 없다 -> Long으로 다운캐스팅을 해야 함
+		
+		int age = ((Long)jobj.get("age")).intValue();
+		
+		System.out.println(name + ", " + age);
+		
+		
+		return "success!!!!";
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	

@@ -57,4 +57,10 @@ public class BoardServiceImpl implements BoardService{
 		return bDao.deleteBoard(bId);
 	}
 
+	@Override
+	public ArrayList<Board> selectTopList() {
+		// TODO Auto-generated method stub
+		return bDao.selectTopList();
+	}
+
 }

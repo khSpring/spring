@@ -43,4 +43,8 @@
   	<update id="deleteMember" parameterType="string">
   		UPDATE MEMBER SET M_STATUS = 'N' WHERE ID=#{id}
   	</update>
+  	
+  	<select id="checkIdDup" parameterType="string" resultType="_int">
+  		SELECT COUNT(*) FROM MEMBER WHERE ID = #{id}
+  	</select>
 </mapper>

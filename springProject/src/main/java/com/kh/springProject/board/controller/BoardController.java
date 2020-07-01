@@ -1,10 +1,14 @@
 package com.kh.springProject.board.controller;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +22,9 @@ import com.kh.springProject.board.model.service.BoardService;
 import com.kh.springProject.board.model.vo.Board;
 import com.kh.springProject.board.model.vo.PageInfo;
 import com.kh.springProject.common.Pagination;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 @Controller
 public class BoardController {
@@ -243,4 +250,60 @@ public class BoardController {
 			throw new BoardException("게시글 삭제 실패!");
 		}
 	}
+	
+	//	-------------------------- ajax 이후에 작성한 부분 ----------------------------
+	
+	/*
+	 *  1. stream을 이용한 json배열 보내기
+	 */
+	@RequestMapping("topList.do")
+	public void boardTopList(HttpServletResponse response) throws IOException
+	{
+		response.setContentType("application/json;charset=utf-8");
+		
+		ArrayList<Board> list = bService.selectTopList();
+		// DB로부터 조회수가 높은 순 5개를 ArrayList에 담아 오기
+		
+		JSONArray jArr = new JSONArray();
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		
+		for(Board b : list)
+		{
+			JSONObject jobj = new JSONObject();
+			jobj.put("bId", b.getbId());
+			jobj.put("bTitle", b.getbTitle());
+			jobj.put("bWriter", b.getbWriter());
+			jobj.put("bCreateDate", sdf.format(b.getbCreateDate()));
+			jobj.put("bCount", b.getbCount());
+			jobj.put("originalFileName", b.getOriginalFileName());
+			
+			jArr.add(jobj);
+		}
+		
+		JSONObject sendJson = new JSONObject();
+		sendJson.put("list", jArr);
+		
+		PrintWriter out = response.getWriter();
+		out.print(sendJson);
+		out.flush();
+		out.close();
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

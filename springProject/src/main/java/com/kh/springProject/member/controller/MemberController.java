@@ -1,6 +1,8 @@
 package com.kh.springProject.member.controller;
 
-import javax.servlet.http.HttpSession;
+import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.springProject.member.model.exception.MemberException;
 import com.kh.springProject.member.model.service.MemberService;
@@ -344,5 +347,57 @@ public class MemberController {
 				throw new MemberException("탈퇴 실패!");
 			}
 		}
+		
+		// --------------------------------ajax--------------------------------
+		/*
+		 *  1. Stream을 이용한 방식
+		 */
+//		@RequestMapping("dupid.do")
+//		public void idDuplicateCheck(HttpServletResponse response, String id) throws IOException
+//		{
+//			boolean isUsable = mService.checkIdDup(id) == 0 ? true : false;
+//			
+//			PrintWriter pw = response.getWriter();
+//			pw.print(isUsable);
+//			pw.flush();
+//			pw.close();
+//		}
+		
+		/*
+		 *  2. JsonView를 이용한 방식
+		 *  
+		 */
+		@RequestMapping("dupid.do")
+		public ModelAndView idDuplicateCheck(String id, ModelAndView mv)
+		{
+			Map map = new HashMap();
+			
+			boolean isUsable = mService.checkIdDup(id) == 0 ? true : false;
+			
+			map.put("isUsable", isUsable);
+			
+			mv.addAllObjects(map);
+			mv.setViewName("jsonView");
+			
+			return mv;
+		}
+		
+		
+		
+		
+		
+		
+		
+	
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 }

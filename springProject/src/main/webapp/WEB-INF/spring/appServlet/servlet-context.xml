@@ -23,6 +23,13 @@
 	
 	<context:component-scan base-package="com.kh.springProject" />
 	
-	
+	<beans:bean id="jsonView"
+		class="net.sf.json.spring.web.servlet.view.JsonView" />
+
+	<!-- ViewResolver라 하면, viewName과 view단을 연결해주는 역할을 한다. -->
+	<beans:bean id="viewResolver"
+		class="org.springframework.web.servlet.view.BeanNameViewResolver">
+		<beans:property name="order" value="0"/>
+	</beans:bean>
 	
 </beans:beans>

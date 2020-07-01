@@ -36,7 +36,13 @@
 					<td width="150">* 아이디</td>
 					<td width="450">
 						<input type="text" name="id" id="userId">
-						<!-- ajax후에 적용할 부분 -->
+						<!-------------- ajax후에 적용할 부분 -------------->
+						
+						<span class="guide ok">이 아이디는 사용 가능합니다.</span>
+						<span class="guide error">이 아이디는 사용할 수 없습니다.</span>
+						<input type="hidden" name="idDuplicateCheck" id="idDuplicateCheck" value="0">
+						
+						<!-- --------------------------------------- -->
 					</td>
 				</tr>
 				<tr>
@@ -111,9 +117,67 @@
 	<!-- 작성 후 minsert.do요청을 처리하는 부분을 작성하러 MemberController로 다시 돌아가자. -->
 	
 	<script>
-		function validate(){
+		/* function validate(){
 			$("#joinForm").submit();
+		} */
+		
+		//ajax 이후에 추가한 것들
+		$(function(){
+			$("#userId").on("keyup",function(){
+				var userId = $(this).val().trim();
+				
+				if(userId.length < 4) {
+					$(".guide").hide();
+					$("#idDuplicateCheck").val(0);
+					
+					return;
+					// 에초에 4글자가 안되게 아이디를 쓰면 ajax가 실행되지 않고
+					// 이벤트 핸들러 함수가 종료되게 하기 위해서 return;
+				}
+				
+				$.ajax({
+					url:"dupid.do",
+					data:{id:userId},
+					success:function(data){
+						//1, Stream을 이용한 방식
+						//if(data == "true"){
+						//2. jsonView를 이용한 방식
+						if(data.isUsable == true){	//보내고자 하는 자료형을 그대로 뽑아올 수 있다.
+							$(".guide.error").hide();
+							$(".guide.ok").show();
+							$("#idDuplicateCheck").val(1);
+						}
+						else{
+							$(".guide.error").show();
+							$(".guide.ok").hide();
+							$("#idDuplicateCheck").val(0);
+						}
+					},
+					error:function(request, status, errorData){
+	                    alert("error code: " + request.status + "\n"
+	                          +"message: " + request.responseText
+	                          +"error: " + errorData);
+                  	}   
+				
+				})
+				
+			})
+			
+		})
+		
+		function validate(){
+			// 아이디 중복 체크 후 회원가입 버튼 눌렀을 때
+			if($("#idDuplicateCheck").val() == 0){
+				alert("사용 가능한 아이디를 입력해 주세요.");
+				$("#userId").focus();
+			}else{
+				$("#joinForm").submit();
+			}
+			
+				
 		}
+		
+		// 여기까지해서 아이디 중복체크를 완성하고 나면 home.jsp로 가서 게시글 top5하러 가자
 	</script>
 	
 	
