@@ -35,7 +35,8 @@
 					$tableBody = $("#tb tbody");
 					$tableBody.html("");
 					
-					for(var i in data.list){
+					// 1번 방법(스트림으로 하는 방법)
+					/* for(var i in data.list){
 						var $tr = $("<tr>");
 						var $bId = $("<td>").text(data.list[i].bId);
 						var $bTitle = $("<td>").text(data.list[i].bTitle);
@@ -45,6 +46,30 @@
 						var $bFile = $("<td>").text(" ");
 						
 						if(data.list[i].originalFileName != null){
+							$bFile = $("<td>").text("★");
+						}
+						
+						$tr.append($bId);
+						$tr.append($bTitle);
+						$tr.append($bWriter);
+						$tr.append($bCreateDate);
+						$tr.append($bCount);
+						$tr.append($bFile);
+						
+						$tableBody.append($tr);
+					} */
+					
+					// 2번 방법
+					for(var i in data){
+						var $tr = $("<tr>");
+						var $bId = $("<td>").text(data[i].bId);
+						var $bTitle = $("<td>").text(data[i].bTitle);
+						var $bWriter = $("<td>").text(data[i].bWriter);
+						var $bCreateDate = $("<td>").text(data[i].bCreateDate);
+						var $bCount = $("<td>").text(data[i].bCount);
+						var $bFile = $("<td>").text(" ");
+						
+						if(data[i].originalFileName != null){
 							$bFile = $("<td>").text("★");
 						}
 						
@@ -75,6 +100,8 @@
 		})
 		
 	</script>
+	
+	<!-- 다 했으면 댓글 달기 하게 boardDetailView로 가자! -->
 	
 
 

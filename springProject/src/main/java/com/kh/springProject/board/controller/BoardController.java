@@ -2,29 +2,31 @@ package com.kh.springProject.board.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonIOException;
 import com.kh.springProject.board.model.exception.BoardException;
 import com.kh.springProject.board.model.service.BoardService;
 import com.kh.springProject.board.model.vo.Board;
 import com.kh.springProject.board.model.vo.PageInfo;
+import com.kh.springProject.board.model.vo.Reply;
 import com.kh.springProject.common.Pagination;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.kh.springProject.member.model.vo.Member;
 
 @Controller
 public class BoardController {
@@ -256,44 +258,92 @@ public class BoardController {
 	/*
 	 *  1. stream을 이용한 json배열 보내기
 	 */
+//	@RequestMapping("topList.do")
+//	public void boardTopList(HttpServletResponse response) throws IOException
+//	{
+//		response.setContentType("application/json;charset=utf-8");
+//		
+//		ArrayList<Board> list = bService.selectTopList();
+//		// DB로부터 조회수가 높은 순 5개를 ArrayList에 담아 오기
+//		
+//		JSONArray jArr = new JSONArray();
+//		
+//		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//		
+//		for(Board b : list)
+//		{
+//			JSONObject jobj = new JSONObject();
+//			jobj.put("bId", b.getbId());
+//			jobj.put("bTitle", b.getbTitle());
+//			jobj.put("bWriter", b.getbWriter());
+//			jobj.put("bCreateDate", sdf.format(b.getbCreateDate()));
+//			jobj.put("bCount", b.getbCount());
+//			jobj.put("originalFileName", b.getOriginalFileName());
+//			
+//			jArr.add(jobj);
+//		}
+//		
+//		JSONObject sendJson = new JSONObject();
+//		sendJson.put("list", jArr);
+//		
+//		PrintWriter out = response.getWriter();
+//		out.print(sendJson);
+//		out.flush();
+//		out.close();
+//	}
+	
+	/*
+	 *  2. Gson을 이용하는 방법	(pom.xml에 등록해서 라이브러리 다운 받자)
+	 *  	
+	 *  	컬렉션을 아주 쉽게 json 객체로 전송하는 방법
+	 *  	Gson은 Jackson보다도 더 간단하게 처리해서 보낼 수 있다.
+	 *  	*Date형에 대해서는 GsonBuilder를 이용한 처리를 할 수 있다.
+	 *  
+	 */
+	
 	@RequestMapping("topList.do")
-	public void boardTopList(HttpServletResponse response) throws IOException
+	public void boardTopList(HttpServletResponse response) throws JsonIOException, IOException
 	{
-		response.setContentType("application/json;charset=utf-8");
-		
 		ArrayList<Board> list = bService.selectTopList();
-		// DB로부터 조회수가 높은 순 5개를 ArrayList에 담아 오기
+		response.setContentType("application/json;charset=utf-8");
+		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+		gson.toJson(list, response.getWriter());
 		
-		JSONArray jArr = new JSONArray();
-		
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		
-		for(Board b : list)
-		{
-			JSONObject jobj = new JSONObject();
-			jobj.put("bId", b.getbId());
-			jobj.put("bTitle", b.getbTitle());
-			jobj.put("bWriter", b.getbWriter());
-			jobj.put("bCreateDate", sdf.format(b.getbCreateDate()));
-			jobj.put("bCount", b.getbCount());
-			jobj.put("originalFileName", b.getOriginalFileName());
-			
-			jArr.add(jobj);
-		}
-		
-		JSONObject sendJson = new JSONObject();
-		sendJson.put("list", jArr);
-		
-		PrintWriter out = response.getWriter();
-		out.print(sendJson);
-		out.flush();
-		out.close();
 	}
 	
+	// 댓글 관련 부분
+	// 1. 댓글 리스트 불러오기
+	@RequestMapping("rlist.do")
+	public void getReplyList(HttpServletResponse response, int bId) throws JsonIOException, IOException
+	{
+		ArrayList<Reply> rList = bService.selectReplyList(bId);
+//		System.out.println(rList);
+		response.setContentType("application/json;charset=utf-8");
+		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+		gson.toJson(rList, response.getWriter());
+	}
 	
-	
-	
-	
+	// 2. 댓글 달기
+	@RequestMapping("addReply.do")
+	@ResponseBody	// 스트림 안쓰고 값 보내기
+	public String addReply(Reply r, HttpSession session) throws BoardException
+	{
+		Member loginUser = (Member)session.getAttribute("loginUser");
+		String rWriter = loginUser.getId();
+		r.setrWriter(rWriter);
+		
+		int result = bService.insertReply(r);
+		
+		if(result > 0)
+		{
+			return "success";
+		}
+		else
+		{
+			throw new BoardException("댓글 등록 실패");
+		}
+		
+	}
 	
 	
 	

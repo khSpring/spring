@@ -9,6 +9,7 @@
 		<typeAlias type="com.kh.springProject.member.model.vo.Member" alias="Member"/>
 		<typeAlias type="com.kh.springProject.notice.model.vo.Notice" alias="Notice"/>
 		<typeAlias type="com.kh.springProject.board.model.vo.Board" alias="Board"/>
+		<typeAlias type="com.kh.springProject.board.model.vo.Reply" alias="Reply"/>
 	</typeAliases>
 	
 	<mappers>

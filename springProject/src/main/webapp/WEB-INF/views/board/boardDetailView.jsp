@@ -63,6 +63,111 @@
 		</tr>
 	</table>
 	
+	<!-- ajax 이후에 댓글 달기 했을 때 작성한 부분 -->
+	<!-- 댓글 등록하기 -->
+	<table align="center" width="500" border="1" cellspacing="0">
+		<tr>
+			<td><textarea cols="55" rows="3" id="rContent"></textarea></td>
+			<td>
+				<button id="rSubmit">등록하기</button>
+			</td>
+		</tr>		
+	</table>
+	
+	<!-- 댓글 목록보기 -->
+	<table align="center" width="500" border="1" cellspacing="0" id="rtb">
+		<thead>
+			<tr>
+				<td colspan="2"><b id="rCount"></b></td>
+			</tr>
+		</thead>
+		<tbody>
+			
+		</tbody>
+	</table>
+	
+	<script>
+		$(function(){
+			getReplyList();
+			
+			setInterval(function(){
+				getReplyList();
+			}, 10000);
+			
+			$("#rSubmit").on("click", function(){
+				var rContent = $("#rContent").val();
+				var refBid = ${board.bId};
+				
+				$.ajax({
+					url:"addReply.do",
+					data:{rContent:rContent, refBid:refBid},
+					success:function(data){
+						if(data == "success"){
+							getReplyList();			// 댓글 등록 했을 시 setInterval 안기다리고 바로 등록하고
+													// 그사이 다른 사람이 댓글을 쓸 경우까지 대비해서 그냥 DB의 최신화된 댓글을 불러오는 것으로 하자
+													
+							$("#rContent").val("");	// 댓글 작성부분 리셋하기
+						}
+					},
+					error:function(request, status, errorData){
+						alert("error code: " + request.status + "\n"
+								+"message: " + request.responseText
+								+"error: " + errorData);
+					}
+				})
+			})
+		})
+		
+		function getReplyList(){
+			var bId = ${board.bId};
+			
+			$.ajax({
+				url:"rlist.do",
+				data:{bId:bId},
+				dataType:"json",
+				success:function(data){
+					$tableBody = $("#rtb tbody");
+					$tableBody.html("");
+					
+					var $tr;
+					var $rWriter;
+					var $rContent;
+					var $rCreateDate;
+					
+					$("#rCount").text("댓글(" + data.length + ")");
+					
+					if(data.length > 0){	//댓글이 하나 이상 존재하면
+						for(var i in data){
+							$tr = $("<tr>");
+							$rWriter=$("<td width='100'>").text(data[i].rWriter);
+							$rContent=$("<td>").text(data[i].rContent);
+							$rCreateDate=$("<td width='100'>").text(data[i].rCreateDate);
+							
+							$tr.append($rWriter);
+							$tr.append($rContent);
+							$tr.append($rCreateDate);
+							$tableBody.append($tr);
+						}
+					}
+					else{	// 댓글이 없으면
+						$tr = $("<tr>");
+						$rContent=$("<td colspan='3'>").text("등록된 댓글이 없습니다.");
+						$tr.append($rContent);
+						$tableBody.append($tr);
+					}
+				},
+				error:function(request, status, errorData){
+					alert("error code: " + request.status + "\n"
+							+"message: " + request.responseText
+							+"error: " + errorData);
+				}
+			})
+		}
+	</script>
+	
+	<br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+	<br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+	
 	
 	
 	

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.kh.springProject.board.model.dao.BoardDao;
 import com.kh.springProject.board.model.vo.Board;
 import com.kh.springProject.board.model.vo.PageInfo;
+import com.kh.springProject.board.model.vo.Reply;
 
 @Service("bService")
 public class BoardServiceImpl implements BoardService{
@@ -61,6 +62,18 @@ public class BoardServiceImpl implements BoardService{
 	public ArrayList<Board> selectTopList() {
 		// TODO Auto-generated method stub
 		return bDao.selectTopList();
+	}
+
+	@Override
+	public ArrayList<Reply> selectReplyList(int bId) {
+		
+		return bDao.selectReplyList(bId);
+	}
+
+	@Override
+	public int insertReply(Reply r) {
+		// TODO Auto-generated method stub
+		return bDao.insertReply(r);
 	}
 
 }

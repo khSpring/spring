@@ -15,6 +15,17 @@
 		<result property="bModifyDate" column="B_MODIFY_DATE"/>
 		<result property="bStatus" column="B_STATUS"/>
 	</resultMap>
+	
+	<resultMap type="Reply" id="replyResultSet">
+		<id property="rId" column="RID"/>
+		<result property="rContent" column="RCONTENT"/>
+		<result property="refBid" column="REF_BID"/>
+		<result property="rWriter" column="RWRITER"/>
+		<result property="rCreateDate" column="R_CREATE_DATE"/>
+		<result property="rModifyDate" column="R_MODITY_DATE"/>
+		<result property="rStatus" column="R_STATUS"/>
+		
+	</resultMap>
 	<select id="getListCount" resultType="_int">
 		SELECT COUNT(*) FROM BOARD
 		WHERE B_STATUS='Y'
@@ -74,4 +85,15 @@
 		WHERE ROWNUM <= 5
 	]]>
 	</select>
+	
+	<select id="selectReplyList" parameterType="_int" resultMap="replyResultSet">
+		SELECT *
+		FROM REPLY
+		WHERE REF_BID=#{bId}
+		ORDER BY RID DESC
+	</select>
+	
+	<insert id="insertReply" parameterType="Reply">
+		INSERT INTO REPLY VALUES(SEQ_RID.NEXTVAL, #{rContent}, #{refBid}, #{rWriter}, SYSDATE, SYSDATE, DEFAULT)
+	</insert>
 </mapper>

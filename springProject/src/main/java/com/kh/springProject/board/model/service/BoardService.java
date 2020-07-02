@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.kh.springProject.board.model.vo.Board;
 import com.kh.springProject.board.model.vo.PageInfo;
+import com.kh.springProject.board.model.vo.Reply;
 
 @Service
 public interface BoardService {
@@ -25,5 +26,9 @@ public interface BoardService {
 	int deleteBoard(int bId);
 
 	ArrayList<Board> selectTopList();
+
+	ArrayList<Reply> selectReplyList(int bId);
+
+	int insertReply(Reply r);
 
 }
