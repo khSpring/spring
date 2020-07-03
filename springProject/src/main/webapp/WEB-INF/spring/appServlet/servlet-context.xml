@@ -3,9 +3,11 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:beans="http://www.springframework.org/schema/beans"
 	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
 	xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
 		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
 
 	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
 	
@@ -21,7 +23,7 @@
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
 	
-	<context:component-scan base-package="com.kh.springProject" />
+	<context:component-scan base-package="com.kh.springProject, aopTest" />
 	
 	<beans:bean id="jsonView"
 		class="net.sf.json.spring.web.servlet.view.JsonView" />
@@ -31,5 +33,15 @@
 		class="org.springframework.web.servlet.view.BeanNameViewResolver">
 		<beans:property name="order" value="0"/>
 	</beans:bean>
+	
+	<!-- AOP적용부터 할 부분(XML방식) -->
+	<!-- aop관련 라이브러리들을 추가했다면 Namespaces에 가서 aop도 체크해서 추가하자 -->
+	<aop:config>
+		<aop:aspect id="traceAspect" ref="performanceAOP">
+			<aop:around method="aroundLog" pointcut="execution(public * com.kh.springProject..*ServiceImpl.*(..))"/>
+		</aop:aspect>
+	</aop:config>
+	<!-- 설정이 끝났으면 aroundLog를 완성(PerformanceAOP에서)하고 프로그램을 실행해 보자 -->
+	
 	
 </beans:beans>
