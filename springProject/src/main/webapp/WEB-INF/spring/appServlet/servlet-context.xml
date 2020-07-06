@@ -13,6 +13,10 @@
 	
 	<!-- Enables the Spring MVC @Controller programming model -->
 	<annotation-driven />
+	
+	<!-- 어노테이션 방식으로 AOP설정 -->
+	<!-- @Aspect가 선언된 클래스를 모두 애스택트로 등록 해주기 위해 작성하는 부분 -->
+	<aop:aspectj-autoproxy/>
 
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
 	<resources mapping="/resources/**" location="/resources/" />
@@ -36,11 +40,11 @@
 	
 	<!-- AOP적용부터 할 부분(XML방식) -->
 	<!-- aop관련 라이브러리들을 추가했다면 Namespaces에 가서 aop도 체크해서 추가하자 -->
-	<aop:config>
+	<!-- <aop:config>
 		<aop:aspect id="traceAspect" ref="performanceAOP">
 			<aop:around method="aroundLog" pointcut="execution(public * com.kh.springProject..*ServiceImpl.*(..))"/>
 		</aop:aspect>
-	</aop:config>
+	</aop:config> -->
 	<!-- 설정이 끝났으면 aroundLog를 완성(PerformanceAOP에서)하고 프로그램을 실행해 보자 -->
 	
 	
