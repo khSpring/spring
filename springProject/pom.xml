@@ -23,7 +23,7 @@
 	-->
 	<properties>
 		<java-version>1.8</java-version>
-		<org.springframework-version>5.2.7.RELEASE</org.springframework-version>
+		<org.springframework-version>5.2.20.RELEASE</org.springframework-version>
 		<org.aspectj-version>1.9.4</org.aspectj-version>	<!-- aop추가시 수정할 부분(mvn repository에서 버전 확인 후) -->
 		<org.slf4j-version>1.6.6</org.slf4j-version>
 	</properties>
